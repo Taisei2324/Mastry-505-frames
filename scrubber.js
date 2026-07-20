@@ -482,24 +482,18 @@
     // No frames at all: nothing to render, but don't hang the page.
     if (count <= 0) { safeCall(onLoadProgress, 0, 0); safeCall(onReady); return; }
 
-    // ---- scroll "slow zone" over the underwater transition ----
-    // The dive + underwater current (frames ~200..366) advance at REDUCED scroll
-    // sensitivity so the water reads slow and deliberate: each frame in the zone
-    // is given a larger scroll "weight" (factor× the normal per-frame scroll),
-    // smoothly ramped in/out so the change in feel is gradual, never a hard step.
-    // The .cine track in CSS is enlarged to absorb the extra travel, so frames
-    // OUTSIDE the zone keep their original sensitivity — nothing else speeds up.
-    // Keep SLOW roughly in sync with the .cine height (style.css); the height is
-    // tuned so non-zone density matches the old linear map.
-    var SLOW = { from: 200, a: 222, b: 346, to: 366, factor: 2.1 };
-    function smoothstep(t) { return t <= 0 ? 0 : (t >= 1 ? 1 : t * t * (3 - 2 * t)); }
-    function frameWeight(f) {
-      if (f <= SLOW.from || f >= SLOW.to) return 1;                   // flat outside the zone
-      if (f >= SLOW.a && f <= SLOW.b) return SLOW.factor;             // full-slow plateau
-      var t = (f < SLOW.a) ? (f - SLOW.from) / (SLOW.a - SLOW.from)   // ramp in
-                           : (SLOW.to - f) / (SLOW.to - SLOW.b);      // ramp out
-      return 1 + (SLOW.factor - 1) * smoothstep(t);
-    }
+    // ---- scroll pacing: negative-exponential sensitivity ----
+    // d(frame)/d(scroll) ∝ e^(−EXPO·x): the journey FLIES at the start and
+    // decelerates exponentially into the arrival — by the last frames each
+    // scroll notch advances ~1/5 as much as at the top, so the bottle settles
+    // onto the Greek ledge in slow, deliberate beats. Implemented as per-frame
+    // scroll WEIGHT (the inverse of sensitivity), which grows e^(+EXPO·f/count);
+    // the node[] machinery below normalises total travel, so the .cine track
+    // height and overall scroll length are unchanged — only the distribution
+    // shifts. (Replaces the old hand-tuned underwater slow zone: the deep-water
+    // frames now sit mid-curve and inherit its gradual deceleration.)
+    var EXPO = 1.6;                                                   // end sensitivity = e^-1.6 ≈ 1/5 of start
+    function frameWeight(f) { return Math.exp(EXPO * (f / count)); }
     // Precompute cumulative weight: node[i] = weighted scroll position of frame i
     // (node[1]=0). A wider gap node[i+1]-node[i] means more scroll to cross that
     // frame = slower there. Built once; the per-tick lookup is a cheap bisect.

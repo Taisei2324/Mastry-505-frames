@@ -197,8 +197,9 @@
            of the site — so load it regardless after a generous beat. */
         setTimeout(loadRestOfSite, reduceMotion ? 1500 : 15000);
       },
-      onProgress: function (p) {                 /* eased progress from the engine */
+      onProgress: function (p, frame) {          /* eased progress from the engine */
         if (p < 0) p = 0; else if (p > 1) p = 1;
+        window.__cineFrame = frame;              /* instrumentation: current painted frame (cheap plain write) */
         /* NOTE: no per-tick style writes here. Setting a :root custom property
            every animation frame invalidates style for the whole document (the
            old --cp write — nothing consumed it) and reads as jank, especially
