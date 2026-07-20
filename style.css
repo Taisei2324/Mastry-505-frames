@@ -1,3 +1,13 @@
+/* ── self-hosted variable fonts — zero external dependency (the Google Fonts
+   link proved flaky on some networks: stalls, silently dropped faces).
+   Pairing: Cormorant Garamond (delicate high-contrast serif — the hero's
+   original minimalist voice) × Jost (geometric Bauhaus-precision sans for
+   body/UI — totally different classification, equally quiet). Japanese glyphs
+   (Noto Serif JP) still ride Google with system fallback. ── */
+@font-face{font-family:'Cormorant Garamond';src:url('fonts/cormorant-var.woff2') format('woff2-variations');font-weight:300 700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Cormorant Garamond';src:url('fonts/cormorant-var-italic.woff2') format('woff2-variations');font-weight:300 700;font-style:italic;font-display:swap;}
+@font-face{font-family:'Jost';src:url('fonts/jost-var.woff2') format('woff2-variations');font-weight:100 900;font-style:normal;font-display:swap;}
+
 /* ═══════════════════════════════════════════════════════════
    MASTRY — Sparkling Water with Mastic
    Minimalist editorial · Chios × Japan
@@ -47,7 +57,7 @@
   --nav-h:76px;
   --ease:cubic-bezier(.22,1,.36,1);
   --serif:'Cormorant Garamond',serif;
-  --sans:'Inter',sans-serif;
+  --sans:'Jost',sans-serif;
   --jp:'Noto Serif JP',serif;
 }
 
