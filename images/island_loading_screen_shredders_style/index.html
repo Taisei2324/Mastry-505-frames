@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Island Loading Screen</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <section id="loadingScreen" class="loading-screen" aria-label="Loading">
+    <div class="snow-bg"></div>
+
+    <div class="loading-mark" aria-hidden="true">
+      <img class="layer layer-shadow" src="./island-logo.svg" alt="" />
+      <img class="layer layer-cyan" src="./island-logo.svg" alt="" />
+      <img class="layer layer-magenta" src="./island-logo.svg" alt="" />
+      <img class="layer layer-yellow" src="./island-logo.svg" alt="" />
+      <img class="layer layer-main" src="./island-logo.svg" alt="" />
+
+      <div class="slice-row" id="sliceRow"></div>
+    </div>
+
+    <p class="save-note">This site saves your progress automatically. Please do not close the page while the save indicator is active.</p>
+    <div class="save-icon"></div>
+  </section>
+
+  <main class="page">
+    <h1>Page loaded</h1>
+    <button id="replay">Replay loading screen</button>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

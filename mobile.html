@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Mastry — Sparkling Water with Mastic</title>
+  <link rel="icon" href="images/better web logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-text-size-adjust:100%;overflow-x:hidden;scroll-behavior:smooth;}
+    body{font-family:'Inter',sans-serif;background:#0d0d0d;color:#f5f0e8;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;}
+    :root{--sage:#4a6040;--cream:#f5f0e8;--muted:rgba(245,240,232,0.55);--border:rgba(245,240,232,0.12);--nav-h:56px;--tab-h:calc(54px + env(safe-area-inset-bottom));}
+
+    /* LOADING SCREEN */
+    #loadingScreen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s ease;overflow:hidden;}
+    #loadingScreen.hidden{opacity:0;pointer-events:none;}
+    .ls-bg{position:absolute;inset:-4%;background:url('images/IMG_0043.jpg') center/cover no-repeat;filter:brightness(0.62) saturate(0.85);animation:lsBgDrift 3s ease-in-out infinite alternate;}
+    @keyframes lsBgDrift{from{transform:translateX(0) scale(1);}to{transform:translateX(-2%) scale(1.04);}}
+    .ls-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,0.65) 100%);}
+    .ls-haze{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(180,210,240,.18) 0%,rgba(140,180,220,.08) 25%,transparent 50%,rgba(0,0,0,.5) 100%);}
+    .ls-center{position:relative;z-index:2;width:min(520px,86vw);overflow:visible;}
+    .ls-ref{width:100%;height:auto;display:block;visibility:hidden;pointer-events:none;}
+    .ls-shad{position:absolute;inset:0;opacity:0;transition:opacity .4s ease;pointer-events:none;}
+    .ls-shad-color{position:absolute;inset:0;-webkit-mask:url('images/loading screen.png') top left/100% auto no-repeat;mask:url('images/loading screen.png') top left/100% auto no-repeat;}
+    .ls-shad-r{transform:translate(-4px,0);}
+    .ls-shad-c{transform:translate(4px,0);}
+    .ls-slices{position:absolute;inset:0;display:flex;align-items:center;}
+    .ls-sl{position:relative;height:100%;overflow:visible;transform-origin:center center;will-change:transform,opacity,filter;}
+    .ls-clip{position:absolute;inset:0;overflow:hidden;}
+    .ls-clip img{position:absolute;top:0;display:block;height:auto;}
+    .ls-final{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 200ms ease;}
+    #lsBottom{position:absolute;bottom:20px;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:center;gap:12px;}
+    #lsBottom span{font-family:'Inter',sans-serif;font-size:9px;font-weight:300;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.38);}
+    #lsIcon{animation:lsPulse 1.4s ease-in-out infinite;}
+    @keyframes lsPulse{0%,100%{opacity:.18;}50%{opacity:.72;}}
+
+    /* NAV */
+    .m-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 16px;padding-top:env(safe-area-inset-top);background:rgba(13,13,13,0.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:100;}
+    .m-nav__logo{font-size:0.95rem;font-weight:900;letter-spacing:0.22em;color:var(--cream);text-decoration:none;}
+    .m-nav__right{display:flex;align-items:center;gap:4px;}
+    .m-nav__cart,.m-nav__menu{position:relative;background:none;border:none;color:var(--cream);padding:8px;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;}
+    .m-nav__badge{position:absolute;top:2px;right:2px;background:var(--sage);color:#fff;font-size:0.55rem;font-weight:800;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;}
+    section{scroll-margin-top:var(--nav-h);}
+
+    /* HUD MENU */
+    .m-hud-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
+    .m-hud-bg.open{display:block;}
+    .m-hud{position:fixed;top:0;right:0;bottom:0;width:min(320px,88vw);background:#0f0f0f;border-left:1px solid var(--border);z-index:501;transform:translateX(100%);transition:transform .3s cubic-bezier(0.32,0.72,0,1);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom);overflow-y:auto;}
+    .m-hud.open{transform:translateX(0);}
+    .m-hud__header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .m-hud__brand{font-size:0.9rem;font-weight:900;letter-spacing:0.22em;color:var(--cream);}
+    .m-hud__close{background:none;border:none;color:var(--muted);font-size:1.6rem;cursor:pointer;line-height:1;touch-action:manipulation;}
+    .m-hud__section{padding:20px 20px 0;}
+    .m-hud__label{font-size:0.6rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage);margin-bottom:12px;display:block;}
+    .m-hud__link{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--cream);font-size:0.95rem;font-weight:600;letter-spacing:0.01em;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+    .m-hud__link:last-child{border-bottom:none;}
+    .m-hud__link-arrow{color:var(--muted);font-size:0.8rem;}
+    .m-hud__divider{height:1px;background:var(--border);margin:8px 20px;}
+    .m-hud__info{padding:20px;}
+    .m-hud__info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+    .m-hud__info-row:last-child{border-bottom:none;}
+    .m-hud__info-label{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+    .m-hud__info-val{font-size:0.75rem;color:var(--cream);text-align:right;}
+    .m-hud__net{padding:12px 20px;margin:0 20px 20px;background:#1a1a1a;border:1px solid var(--border);}
+    .m-hud__net-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:block;}
+    .m-hud__net-val{font-size:0.78rem;font-weight:600;color:var(--cream);}
+
+    /* HERO */
+    .m-hero{position:relative;width:100%;margin-top:var(--nav-h);background:#0d0d0d;}
+    .m-hero__img{width:100%;height:auto;display:block;}
+    .m-hero__logo{position:absolute;bottom:-8px;left:-6px;width:160px;height:118px;background:transparent;--poster-color:transparent;display:block;pointer-events:auto;}
+    .m-hero__content{padding:16px 20px 20px;background:#0d0d0d;}
+    .m-hero__eyebrow{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;display:block;}
+    .m-hero__title{font-size:clamp(2rem,8.5vw,2.8rem);font-weight:900;line-height:0.95;letter-spacing:-0.03em;color:#fff;margin-bottom:10px;}
+    .m-hero__sub{font-size:0.82rem;line-height:1.6;color:rgba(255,255,255,0.55);margin-bottom:14px;}
+    .m-hero__actions{display:flex;gap:10px;}
+
+    /* BUTTONS */
+    .m-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;font-family:inherit;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;transition:opacity .2s;}
+    .m-btn:active{opacity:0.75;}
+    .m-btn--solid{background:#fff;color:#0d0d0d;}
+    .m-btn--outline{background:transparent;border:1px solid rgba(255,255,255,0.35);color:#fff;}
+    .m-btn--sage{background:var(--sage);color:#fff;min-height:52px;font-size:0.8rem;}
+    .m-btn--dark{background:#1a1a1a;color:var(--cream);border:1px solid var(--border);}
+
+    /* STRIP */
+    .m-strip{background:var(--sage);overflow:hidden;padding:11px 0;}
+    .m-strip__track{display:flex;gap:24px;white-space:nowrap;animation:marquee 28s linear infinite;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.85);}
+    @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .m-dot{color:rgba(255,255,255,0.35);}
+
+    /* PRODUCTS */
+    .m-products{padding:44px 20px;background:#0d0d0d;}
+    .m-section-header{margin-bottom:28px;}
+    .m-eyebrow{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;display:block;}
+    .m-title{font-size:clamp(1.9rem,8.5vw,2.6rem);font-weight:900;line-height:0.95;letter-spacing:-0.03em;color:var(--cream);}
+    .m-lead{font-size:0.87rem;color:var(--muted);line-height:1.7;margin-top:10px;}
+    .m-catalog-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:0 20px 4px;}
+    .m-catalog-scroll::-webkit-scrollbar{display:none;}
+    .m-card{flex:0 0 72vw;max-width:280px;scroll-snap-align:start;background:#1a1a1a;border:1px solid var(--border);overflow:hidden;cursor:pointer;touch-action:manipulation;}
+    .m-card:active{opacity:0.85;}
+    .m-card__img{width:100%;height:auto;display:block;object-fit:contain;background:#1a1a1a;}
+    .m-card__body{padding:16px 16px 18px;}
+    .m-card__tag{font-size:0.6rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#b07d3a;margin-bottom:6px;display:block;}
+    .m-card__name{font-size:1.3rem;font-weight:900;line-height:1.0;letter-spacing:-0.02em;color:var(--cream);margin-bottom:8px;}
+    .m-card__desc{font-size:0.77rem;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+    .m-card__footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px;}
+    .m-card__price{font-size:0.77rem;font-weight:600;color:var(--muted);}
+    .m-card__add{font-size:0.67rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);}
+
+    /* PHOTO SECTIONS */
+    .m-photo{position:relative;width:100%;background:#0d0d0d;}
+    .m-photo__img{width:100%;height:auto;display:block;}
+    .m-photo__content{padding:28px 24px 36px;background:#0d0d0d;}
+    .m-photo__caption{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:block;margin-top:10px;}
+    .m-photo__title{font-size:clamp(2rem,9vw,2.8rem);font-weight:900;line-height:0.95;letter-spacing:-0.03em;color:#fff;margin-bottom:10px;}
+    .m-photo__sub{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;max-width:340px;}
+
+    /* BOTTLE */
+    .m-bottle{background:#0d0d0d;}
+    .m-bottle__img{width:100%;height:auto;display:block;}
+    .m-bottle__text{padding:28px 24px 44px;}
+    .m-bottle__features{display:flex;flex-direction:column;gap:10px;margin:20px 0 28px;}
+    .m-bottle__feature{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;}
+    .m-bottle__label{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+    .m-bottle__val{font-size:0.78rem;font-weight:600;color:var(--cream);}
+
+    /* ABOUT */
+    .m-about{padding:48px 20px;background:#111;}
+    .m-stats{margin-top:32px;}
+    .m-stat{border-top:1px solid var(--border);padding:18px 0;}
+    .m-stat__num{font-size:3rem;font-weight:900;letter-spacing:-0.04em;line-height:1;color:var(--cream);}
+    .m-stat__unit{font-size:1.1rem;font-weight:700;color:var(--sage);}
+    .m-stat__label{font-size:0.74rem;color:var(--muted);margin-top:4px;}
+
+    /* ORDER */
+    .m-order{padding:48px 20px calc(36px + var(--tab-h));background:#0d0d0d;}
+    .m-form{display:flex;flex-direction:column;gap:16px;margin-top:28px;}
+    .m-field{display:flex;flex-direction:column;gap:6px;}
+    .m-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+    .m-input{background:#1a1a1a;border:1px solid var(--border);color:var(--cream);font-family:inherit;font-size:16px;padding:16px 14px;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;border-radius:0;width:100%;min-height:52px;}
+    .m-input:focus{border-color:var(--sage);}
+    .m-input--select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(245,240,232,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;}
+    .m-input--textarea{min-height:96px;resize:none;}
+    .m-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .m-form-note{font-size:0.72rem;color:var(--muted);text-align:center;}
+
+    /* FOOTER */
+    .m-footer{background:#080808;padding:28px 20px;padding-bottom:calc(20px + var(--tab-h));border-top:1px solid var(--border);}
+    .m-footer__logo{font-size:0.88rem;font-weight:900;letter-spacing:0.22em;color:#fff;display:block;margin-bottom:10px;}
+    .m-footer__copy{font-size:0.68rem;color:rgba(255,255,255,0.3);line-height:1.6;}
+
+    /* BOTTOM TABS */
+    .m-tabs{position:fixed;bottom:0;left:0;right:0;height:var(--tab-h);padding-bottom:env(safe-area-inset-bottom);background:rgba(13,13,13,0.97);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:100;}
+    .m-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:rgba(255,255,255,0.35);font-size:0.55rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;transition:color .18s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+    .m-tab.active,.m-tab:active{color:var(--sage);}
+
+    /* CART */
+    .m-cart-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;}
+    .m-cart-bg.open{display:block;}
+    .m-cart{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid var(--border);border-radius:20px 20px 0 0;z-index:201;transform:translateY(100%);transition:transform .32s cubic-bezier(0.32,0.72,0,1);padding-bottom:env(safe-area-inset-bottom);max-height:80svh;display:flex;flex-direction:column;}
+    .m-cart.open{transform:translateY(0);}
+    .m-cart__handle{width:36px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:14px auto 0;}
+    .m-cart__header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+    .m-cart__title{font-size:0.8rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);}
+    .m-cart__close{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;touch-action:manipulation;}
+    .m-cart__items{flex:1;overflow-y:auto;padding:16px 20px;}
+    .m-cart__empty{font-size:0.85rem;color:var(--muted);}
+    .m-cart-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+    .m-cart-item__name{flex:1;font-size:0.85rem;font-weight:600;color:var(--cream);}
+    .m-cart-item__controls{display:flex;align-items:center;gap:10px;}
+    .m-cart-item__controls button{background:#1a1a1a;border:1px solid var(--border);color:var(--cream);width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+    .m-cart-item__qty{font-size:0.85rem;min-width:18px;text-align:center;color:var(--cream);}
+    .m-cart-item__price{font-size:0.78rem;color:var(--muted);}
+    .m-cart-item__rm{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;touch-action:manipulation;}
+    .m-cart__footer{padding:16px 20px;border-top:1px solid var(--border);}
+    .m-cart__subtotal{display:flex;justify-content:space-between;font-weight:700;color:var(--cream);margin-bottom:14px;font-size:0.9rem;}
+
+    /* SUCCESS */
+    .m-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;align-items:center;justify-content:center;padding:24px;}
+    .m-success.open{display:flex;}
+    .m-success__box{background:#111;border:1px solid var(--border);padding:44px 32px;text-align:center;width:100%;max-width:340px;}
+    .m-success__icon{font-size:2rem;color:var(--sage);margin-bottom:16px;display:block;}
+    .m-success__title{font-size:1.6rem;font-weight:900;letter-spacing:-0.02em;color:var(--cream);margin-bottom:10px;}
+    .m-success__text{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+  </style>
+  <script>
+    if(!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){window.location.replace('index.html');}
+
+    // Network speed detection — runs before anything loads
+    (function(){
+      var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      var slow = false;
+      if(conn){
+        slow = conn.saveData || ['slow-2g','2g','3g'].indexOf(conn.effectiveType) !== -1;
+      }
+      window.__slowNet = slow;
+      window.__netType = conn ? (conn.effectiveType || 'unknown') : 'unknown';
+    })();
+
+    window.__heroColor=(function(){
+      var hex=['#6B7A32','#F4E8C1','#F7F3E8','#D8C99B','#9A6B43','#263A20','#1F2A1C','#F8F1DC','#FAF8EF','#A8B88A','#8A8678','#EEF2D7','#E1E8BE','#CBD894','#B2C36D','#92A64A','#596830','#46552A','#354322','#26341C','#EEF5EA','#DAE9D2','#BBD3AE','#92B383','#6E9562','#527748','#3F6037','#314C2B','#1D3018','#F4F7EF','#E7EEDB','#D0DCBE','#B8C79E','#8E9F71','#74875B','#5D7049','#485A38','#34452A','#F0FAF7','#DDF1EC','#C3E4DA','#A4D2C4','#83BAAA','#659F90','#4E8376','#3D6A60','#2F554C','#234239','#F3FAFC','#DFEFF3','#C7E2EA','#A8D1DC','#88BBC8','#6FA4B3','#5A8A98','#47717D','#355B66','#264650','#FFFDF3','#FCF8E8','#ECDDAE','#C5B37F','#AC9860','#917C49','#786436','#F6F4EE','#ECE7DB','#D8D1C1','#C4BBA8','#AAA18F','#777061','#625C4F','#4C493F','#38382F','#F6EEE7','#EBD8C8','#D8B99B','#C3936C','#865C3A','#714A2E','#5D3924','#482C1D','#352117','#F7F4D8','#EDE7BF','#DED38E','#B8B66A','#91964F','#71793C','#596532','#425129','#314021','#24341B','#FFF9E8','#F8EDC7','#EEDB9B','#DFC46B','#C6A548','#A88632','#856623','#6F5422','#58431C','#423316','#EEF1EA','#F9F5E9','#E6E0D1','#766A56','#30352C','#1D2E18','#B6A86B','#726A36','#A5A18F','#8B7156','#5B442E','#8A873E','#4E6A35','#7F8A4A','#B9C98C','#DCCB9D','#DDE8C9','#74875A','#9BAE7A','#D7E8E2','#6D9DAA','#CAD6D3','#6C776E'];
+      function h2r(h){return[parseInt(h.slice(1,3),16)/255,parseInt(h.slice(3,5),16)/255,parseInt(h.slice(5,7),16)/255];}
+      var pool=[];hex.map(h2r).forEach(function(c){var mx=Math.max(c[0],c[1],c[2]);if(mx>0.88||mx<0.20)return;var w=mx>=0.45?3:1;for(var i=0;i<w;i++)pool.push(c);});
+      return pool[Math.floor(Math.random()*pool.length)];
+    })();
+  </script>
+</head>
+<body>
+
+  <nav class="m-nav">
+    <a href="#home" class="m-nav__logo">MASTRY</a>
+    <div class="m-nav__right">
+      <button class="m-nav__cart" id="cartBtn" aria-label="Open cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="m-nav__badge" id="cartBadge">0</span>
+      </button>
+      <button class="m-nav__menu" id="menuBtn" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HUD MENU -->
+  <div class="m-hud-bg" id="hudBg" onclick="closeMenu()"></div>
+  <div class="m-hud" id="hudMenu">
+    <div class="m-hud__header">
+      <span class="m-hud__brand">MASTRY</span>
+      <button class="m-hud__close" onclick="closeMenu()">&times;</button>
+    </div>
+
+    <div class="m-hud__section">
+      <span class="m-hud__label">Navigate</span>
+      <a href="#home" class="m-hud__link" onclick="closeMenu()"><span>Home</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="#products" class="m-hud__link" onclick="closeMenu()"><span>Products</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="merch.html" class="m-hud__link"><span>Merch</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="#explore" class="m-hud__link" onclick="closeMenu()"><span>Japan</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="#greece" class="m-hud__link" onclick="closeMenu()"><span>Greece</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="#about" class="m-hud__link" onclick="closeMenu()"><span>About</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+      <a href="#order" class="m-hud__link" onclick="closeMenu()"><span>Order</span><span class="m-hud__link-arrow">&rsaquo;</span></a>
+    </div>
+
+    <div class="m-hud__divider"></div>
+
+    <div class="m-hud__section">
+      <span class="m-hud__label">Contact</span>
+    </div>
+    <div class="m-hud__info">
+      <div class="m-hud__info-row"><span class="m-hud__info-label">Email</span><span class="m-hud__info-val">hello@mastry.jp</span></div>
+      <div class="m-hud__info-row"><span class="m-hud__info-label">Website</span><span class="m-hud__info-val">mastry.jp</span></div>
+      <div class="m-hud__info-row"><span class="m-hud__info-label">Origin</span><span class="m-hud__info-val">Chios, Greece × Japan</span></div>
+      <div class="m-hud__info-row"><span class="m-hud__info-label">Ships from</span><span class="m-hud__info-val">Japan · 3–5 days</span></div>
+    </div>
+
+    <div class="m-hud__divider"></div>
+
+    <div class="m-hud__section" style="margin-bottom:12px;">
+      <span class="m-hud__label">Connection</span>
+    </div>
+    <div class="m-hud__net">
+      <span class="m-hud__net-label">Network</span>
+      <span class="m-hud__net-val" id="hudNetVal">Detecting…</span>
+    </div>
+  </div>
+
+  <section id="home">
+    <div class="m-hero">
+      <img src="" alt="Mastry" class="m-hero__img" id="heroImg" />
+      <script>
+      (function(){
+        // On slow networks use a single lighter image; otherwise random from full set
+        var full=['images/wider and newer web hero.png','images/perfect web hero.png','images/image web hero temple.png','images/web hero half & half.png','images/web hero new striking.png'];
+        var light=['images/perfect web hero.png'];
+        var set = window.__slowNet ? light : full;
+        document.getElementById('heroImg').src = set[Math.floor(Math.random()*set.length)];
+      })();
+      </script>
+      <script>
+      // Only inject model-viewer on fast connections
+      if(!window.__slowNet){
+        document.write('<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"><\/script>');
+        document.write('<model-viewer id="heroModel" src="images/blackfill web hero logo/floating_web_hero_logo2_1.glb" alt="Island 2 Island." camera-controls disable-zoom disable-pan interaction-prompt="none" shadow-intensity="0" exposure="0.7" loading="eager" reveal="auto" min-camera-orbit="auto 65deg auto" max-camera-orbit="auto 115deg auto" class="m-hero__logo"><\/model-viewer>');
+      }
+      </script>
+      <script>
+      if(!window.__slowNet){
+        (function(){
+          function initModel(){
+            var mv=document.getElementById('heroModel');
+            if(!mv)return;
+            var userInteracting=false,resumeTimer=null,theta=0,phiDeg=90,origPhiDeg=90,radius=1,last=performance.now(),RAD=180/Math.PI;
+            mv.addEventListener('pointerdown',function(){userInteracting=true;if(resumeTimer){clearTimeout(resumeTimer);resumeTimer=null;}});
+            function onRelease(){if(resumeTimer){clearTimeout(resumeTimer);resumeTimer=null;}resumeTimer=setTimeout(function(){try{var o=mv.getCameraOrbit();theta=o.theta*RAD;phiDeg=o.phi*RAD;}catch(e){}last=performance.now();userInteracting=false;},180);}
+            mv.addEventListener('pointerup',onRelease);mv.addEventListener('pointercancel',onRelease);
+            mv.addEventListener('load',function(){
+              try{var col=window.__heroColor||[0.60,0.42,0.26],mat=mv.model.materials[0];mat.pbrMetallicRoughness.setMetallicFactor(0);mat.pbrMetallicRoughness.setRoughnessFactor(1.0);mat.setEmissiveFactor([col[0],col[1],col[2]]);}catch(e){}
+              var orbit=mv.getCameraOrbit();origPhiDeg=orbit.phi*RAD;phiDeg=origPhiDeg;theta=orbit.theta*RAD;radius=orbit.radius;last=performance.now();
+              var SLOW=5,FAST=18;
+              function frame(now){var dt=Math.min((now-last)/1000,0.05);last=now;if(!userInteracting){var t=((theta%360)+360)%360,distFront=Math.min(t,360-t),w=Math.min(1,Math.max(0,(distFront-30)/30)),ease=w*w*(3-2*w);theta+=(SLOW+(FAST-SLOW)*ease)*dt;phiDeg+=(origPhiDeg-phiDeg)*(1-Math.exp(-3.5*dt));mv.cameraOrbit=theta.toFixed(2)+'deg '+phiDeg.toFixed(3)+'deg '+radius+'m';}requestAnimationFrame(frame);}
+              requestAnimationFrame(frame);
+            });
+          }
+          if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initModel);}else{initModel();}
+        })();
+      }
+      </script>
+    </div>
+    <div class="m-hero__content">
+      <span class="m-hero__eyebrow">Chios, Greece × Japan</span>
+      <h1 class="m-hero__title">Resin.<br>Water.<br>Nothing else.</h1>
+      <p class="m-hero__sub">The ancient resin of Chios meets the purity of Japanese spring water.</p>
+      <div class="m-hero__actions">
+        <a href="#products" class="m-btn m-btn--solid">Explore the range</a>
+        <a href="#order" class="m-btn m-btn--outline">Order now</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="m-strip">
+    <div class="m-strip__track">
+      <span>Mastic from Chios</span><span class="m-dot">◈</span><span>Assembled in Japan</span><span class="m-dot">◈</span><span>Zero sugar</span><span class="m-dot">◈</span><span>100% natural flavours</span><span class="m-dot">◈</span><span>2,500 years of heritage</span><span class="m-dot">◈</span><span>mastry.jp</span><span class="m-dot">◈</span><span>Mastic from Chios</span><span class="m-dot">◈</span><span>Assembled in Japan</span><span class="m-dot">◈</span><span>Zero sugar</span><span class="m-dot">◈</span><span>100% natural flavours</span><span class="m-dot">◈</span><span>2,500 years of heritage</span><span class="m-dot">◈</span><span>mastry.jp</span><span class="m-dot">◈</span>
+    </div>
+  </div>
+
+  <section class="m-products" id="products">
+    <div class="m-section-header"><span class="m-eyebrow">Chapter two</span><h2 class="m-title">The range.</h2><p class="m-lead">Four expressions. One rare ingredient.</p></div>
+    <div class="m-catalog-scroll">
+      <div class="m-card" onclick="addToCart(1,'Mastry Original',2.62)"><img src="images/brand new original catalog.png" alt="Mastry Original" class="m-card__img" loading="lazy" /><div class="m-card__body"><span class="m-card__tag">Original</span><h3 class="m-card__name">Mastry<br>Original</h3><p class="m-card__desc">Pure Chios Mastic. Delicate pine and cedar notes.</p><div class="m-card__footer"><span class="m-card__price">$2.62 / ¥360</span><span class="m-card__add">+ Add</span></div></div></div>
+      <div class="m-card" onclick="addToCart(2,'Mastry Yuzu',2.84)"><img src="images/Mastry ad yuzu.png" alt="Mastry Yuzu" class="m-card__img" loading="lazy" /><div class="m-card__body"><span class="m-card__tag">Signature</span><h3 class="m-card__name">Mastry<br>Yuzu</h3><p class="m-card__desc">Mastic meets Japanese yuzu citrus. Floral and tart.</p><div class="m-card__footer"><span class="m-card__price">$2.84 / ¥360</span><span class="m-card__add">+ Add</span></div></div></div>
+      <div class="m-card" onclick="addToCart(3,'Mastry Hinoki',2.62)"><img src="images/hinoki mastry ad.png" alt="Mastry Hinoki" class="m-card__img" loading="lazy" /><div class="m-card__body"><span class="m-card__tag">Limited</span><h3 class="m-card__name">Mastry<br>Hinoki</h3><p class="m-card__desc">Mastic with Japanese cypress. Earthy and meditative.</p><div class="m-card__footer"><span class="m-card__price">$2.62 / ¥360</span><span class="m-card__add">+ Add</span></div></div></div>
+      <div class="m-card" onclick="addToCart(4,'Mastry Ume',2.84)"><img src="images/Ume mastry Ad.png" alt="Mastry Ume" class="m-card__img" loading="lazy" /><div class="m-card__body"><span class="m-card__tag">Seasonal</span><h3 class="m-card__name">Mastry<br>Ume</h3><p class="m-card__desc">Mastic and Japanese plum blossom. Gently floral.</p><div class="m-card__footer"><span class="m-card__price">$2.84 / ¥360</span><span class="m-card__add">+ Add</span></div></div></div>
+    </div>
+  </section>
+
+  <section id="explore"><div class="m-photo"><img src="images/ad 5.png" alt="Mastry in Japan" class="m-photo__img" loading="lazy" /><div class="m-photo__content"><span class="m-eyebrow">Chapter one · Assembled in Japan</span><h2 class="m-photo__title">Born in<br><em>Japan.</em></h2><p class="m-photo__sub">Sourced from pristine mountain springs. Carbonated and bottled to Japanese quality standards.</p><span class="m-photo__caption">Mt. Fuji · Yamanashi, Japan</span></div></div></section>
+
+  <section class="m-bottle"><img src="images/mastry ad.png" alt="Mastry bottle" class="m-bottle__img" loading="lazy" /><div class="m-bottle__text"><span class="m-eyebrow">The bottle</span><h2 class="m-title" style="margin-top:8px;">Crafted to<br>be held.</h2><p class="m-lead" style="margin-top:10px;">Glass bottle. Aluminium cap. Illustrated label depicting the journey from Chios to Japan.</p><div class="m-bottle__features"><div class="m-bottle__feature"><span class="m-bottle__label">Material</span><span class="m-bottle__val">Borosilicate glass</span></div><div class="m-bottle__feature"><span class="m-bottle__label">Volume</span><span class="m-bottle__val">500 ml</span></div><div class="m-bottle__feature"><span class="m-bottle__label">Carbonation</span><span class="m-bottle__val">Medium fine bubble</span></div></div><a href="#order" class="m-btn m-btn--outline">Order Mastry</a></div></section>
+
+  <section><div class="m-photo"><img src="images/ad 3.png" alt="Chios, Greece" class="m-photo__img" loading="lazy" /><div class="m-photo__content"><span class="m-eyebrow">Chapter three · Chios, Greece</span><h2 class="m-photo__title">Ancient<br>resin.</h2><p class="m-photo__sub">Pistacia lentiscus trees weep a tear of resin every morning. Harvested by hand. The same ritual for 2,500 years.</p><span class="m-photo__caption">Chios, Greece · Mastic harvest</span></div></div></section>
+
+  <section id="greece"><div class="m-photo"><img src="images/ad 4.png" alt="Mastry — Acropolis" class="m-photo__img" loading="lazy" /><div class="m-photo__content"><span class="m-eyebrow">Rooted in Greece</span><h2 class="m-photo__title">Rooted in<br>Greece.</h2><p class="m-photo__sub">Mastic has been harvested on the island of Chios for over 2,500 years. It can only grow here, nowhere else on earth.</p><span class="m-photo__caption">Acropolis · Athens, Greece</span></div></div></section>
+
+  <section class="m-about" id="about">
+    <span class="m-eyebrow">Chapter four</span>
+    <h2 class="m-title" style="margin-top:8px;">Two worlds.<br>One water.</h2>
+    <p class="m-lead" style="margin-top:10px;">Mastry was born from a single question: what happens when the rarest natural resin on earth meets the world's most refined water culture?</p>
+    <div class="m-stats">
+      <div class="m-stat"><div><span class="m-stat__num" data-target="0">0</span><span class="m-stat__unit">g</span></div><div class="m-stat__label">Sugar — always</div></div>
+      <div class="m-stat"><div><span class="m-stat__num" data-target="100">0</span><span class="m-stat__unit">%</span></div><div class="m-stat__label">Natural flavours</div></div>
+      <div class="m-stat"><div><span class="m-stat__num" data-target="500">0</span><span class="m-stat__unit">ml</span></div><div class="m-stat__label">Per bottle</div></div>
+      <div class="m-stat"><div><span class="m-stat__num" data-target="2500">0</span><span class="m-stat__unit">yr</span></div><div class="m-stat__label">Years of Mastic heritage</div></div>
+    </div>
+  </section>
+
+  <section class="m-order" id="order">
+    <span class="m-eyebrow">Chapter five</span>
+    <h2 class="m-title" style="margin-top:8px;">Order<br>Mastry.</h2>
+    <p class="m-lead" style="margin-top:10px;">International shipping available. We'll confirm within 24 hours.</p>
+    <form class="m-form" id="orderForm">
+      <div class="m-field"><label class="m-label" for="fname">Full name</label><input class="m-input" type="text" id="fname" placeholder="Your name" required autocomplete="name" /></div>
+      <div class="m-field"><label class="m-label" for="femail">Email</label><input class="m-input" type="email" id="femail" placeholder="your@email.com" required autocomplete="email" /></div>
+      <div class="m-row"><div class="m-field"><label class="m-label" for="fproduct">Product</label><select class="m-input m-input--select" id="fproduct" required><option value="">Select</option><option>Mastry Original</option><option>Mastry Yuzu</option><option>Mastry Hinoki</option><option>Mastry Ume</option></select></div><div class="m-field"><label class="m-label" for="fqty">Qty</label><input class="m-input" type="number" id="fqty" min="1" max="48" value="1" required /></div></div>
+      <div class="m-field"><label class="m-label" for="faddress">Delivery address</label><textarea class="m-input m-input--textarea" id="faddress" rows="3" placeholder="Street, City, Country" required></textarea></div>
+      <button type="submit" class="m-btn m-btn--sage">Place Order</button>
+      <p class="m-form-note">International shipping available worldwide.</p>
+    </form>
+  </section>
+
+  <footer class="m-footer"><span class="m-footer__logo">MASTRY</span><p class="m-footer__copy">© 2026 Mastry · mastry.jp · Chios × Japan</p></footer>
+
+  <nav class="m-tabs" aria-label="Navigation">
+    <a href="#home" class="m-tab active" data-section="home"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+    <a href="#products" class="m-tab" data-section="products"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/><rect x="15" y="14" width="7" height="7"/><rect x="2" y="14" width="7" height="7"/></svg><span>Products</span></a>
+    <a href="#explore" class="m-tab" data-section="explore"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span>Explore</span></a>
+    <a href="#about" class="m-tab" data-section="about"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>About</span></a>
+    <a href="#order" class="m-tab" data-section="order"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span>Order</span></a>
+  </nav>
+
+  <div class="m-cart-bg" id="cartBg" onclick="closeCart()"></div>
+  <div class="m-cart" id="cartDrawer">
+    <div class="m-cart__handle"></div>
+    <div class="m-cart__header"><span class="m-cart__title">Your Cart</span><button class="m-cart__close" onclick="closeCart()">×</button></div>
+    <div class="m-cart__items" id="cartItems"><p class="m-cart__empty">Your cart is empty.</p></div>
+    <div class="m-cart__footer" id="cartFooter" style="display:none"><div class="m-cart__subtotal"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div><button class="m-btn m-btn--sage" onclick="checkout()">Checkout</button></div>
+  </div>
+  <div class="m-success" id="successOverlay"><div class="m-success__box"><span class="m-success__icon">◈</span><h3 class="m-success__title">Order received.</h3><p class="m-success__text">Thank you for choosing Mastry. We'll confirm within 24 hours.</p><button class="m-btn m-btn--dark" onclick="closeSuccess()">Continue</button></div></div>
+
+  <div id="loadingScreen" aria-hidden="true">
+    <div class="ls-bg"></div><div class="ls-vignette"></div><div class="ls-haze"></div>
+    <div class="ls-center" id="lsCenter">
+      <img src="images/loading screen.png" class="ls-ref" alt="" />
+      <div class="ls-shad ls-shad-r" id="lsShadR"><div class="ls-shad-color" style="background:#5C0000;"></div></div>
+      <div class="ls-shad ls-shad-c" id="lsShadC"><div class="ls-shad-color" style="background:#0022CC;"></div></div>
+      <div class="ls-slices" id="lsSlices"></div>
+      <img src="images/loading screen.png" class="ls-final" id="lsFinal" alt="" />
+    </div>
+    <div id="lsBottom"><span>Loading. Please do not close this page.</span><span id="lsIcon">◈</span></div>
+  </div>
+
+  <script>
+  (function(){
+    var ls=document.getElementById('loadingScreen'),slicesEl=document.getElementById('lsSlices'),N=6,CYCLE=2000,SWEEP=CYCLE*0.70,pageLoaded=false,pageStartTime=performance.now();
+    function computeCycle(ms){var t=Math.max(0,Math.min(1,(ms-500)/4500));t=t*t;return Math.round(600+(2000-600)*t);}
+    function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+    function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+    function buildSlices(){slicesEl.innerHTML='';for(var i=0;i<N;i++){var sl=document.createElement('div');sl.className='ls-sl';sl.style.flex='0 0 calc(100% / '+N+')';var clip=document.createElement('div');clip.className='ls-clip';var img=document.createElement('img');img.src='images/loading screen.png';img.alt='';img.style.left=(i*-100)+'%';img.style.width=(N*100)+'%';clip.appendChild(img);sl.appendChild(clip);slicesEl.appendChild(sl);}}
+    var startTime=null,exiting=false;
+    setTimeout(function(){document.getElementById('lsShadR').style.opacity='0.75';document.getElementById('lsShadC').style.opacity='0.75';},120);
+    function renderFrame(now){
+      if(!startTime)startTime=now;if(exiting)return;
+      var elapsed=now-startTime,cyclePos=elapsed%CYCLE,t=clamp(cyclePos/SWEEP,0,1),wave=t*(N-1),spread;
+      if(t<0.5){spread=easeInOut(t*2);}else{spread=1-easeInOut((t-0.5)*2);}spread*=Math.sin(t*Math.PI);
+      var slices=slicesEl.querySelectorAll('.ls-sl');
+      for(var i=0;i<slices.length;i++){var sl=slices[i],dist=Math.abs(i-wave),peak=Math.exp(-(dist*dist)/1.8),scale=1+peak*0.45,pull=i-wave,xSpread=pull*2.5*spread,rise=-peak*6;sl.style.opacity='1';sl.style.transform='translateX('+xSpread.toFixed(1)+'px) translateY('+rise.toFixed(1)+'px) scale('+scale.toFixed(3)+')';sl.style.zIndex=String(Math.round(peak*1000));sl.style.filter='blur('+((1-peak)*spread*0.6).toFixed(2)+'px)';}
+      if(pageLoaded&&cyclePos>SWEEP*0.9&&!exiting){
+        exiting=true;
+        var settled=slicesEl.querySelectorAll('.ls-sl');
+        for(var j=0;j<settled.length;j++){settled[j].style.transition='transform 300ms ease-out, filter 300ms ease-out';settled[j].style.transform='translateX(0) translateY(0) scale(1)';settled[j].style.filter='blur(0px)';}
+        setTimeout(function(){slicesEl.style.transition='opacity 240ms ease';slicesEl.style.opacity='0';document.getElementById('lsFinal').style.opacity='1';var sr=document.getElementById('lsShadR'),sc=document.getElementById('lsShadC');sr.style.transition='opacity 500ms ease';sr.style.opacity='0';sc.style.transition='opacity 500ms ease';sc.style.opacity='0';},320);
+        setTimeout(function(){ls.classList.add('hidden');setTimeout(function(){ls.remove();},800);},820);
+        return;
+      }
+      requestAnimationFrame(renderFrame);
+    }
+    buildSlices();
+    setTimeout(function(){requestAnimationFrame(renderFrame);},80);
+    window.addEventListener('load',function(){var ms=performance.now()-pageStartTime;CYCLE=computeCycle(ms);SWEEP=CYCLE*0.70;setTimeout(function(){pageLoaded=true;},Math.max(200,CYCLE*0.5));});
+    setTimeout(function(){pageLoaded=true;},9000);
+  })();
+  </script>
+
+  <script>
+    // Cart
+    let cart=[];
+    function addToCart(id,name,price){const ex=cart.find(i=>i.id===id);if(ex)ex.qty++;else cart.push({id,name,price,qty:1});updateCart();openCart();}
+    function removeFromCart(id){cart=cart.filter(i=>i.id!==id);updateCart();}
+    function changeQty(id,d){const item=cart.find(i=>i.id===id);if(!item)return;item.qty+=d;if(item.qty<=0)removeFromCart(id);else updateCart();}
+    function updateCart(){const total=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartBadge').textContent=total;const el=document.getElementById('cartItems'),footer=document.getElementById('cartFooter');if(!cart.length){el.innerHTML='<p class="m-cart__empty">Your cart is empty.</p>';footer.style.display='none';return;}el.innerHTML=cart.map(i=>`<div class="m-cart-item"><span class="m-cart-item__name">${i.name}</span><div class="m-cart-item__controls"><button onclick="changeQty(${i.id},-1)">−</button><span class="m-cart-item__qty">${i.qty}</span><button onclick="changeQty(${i.id},1)">+</button></div><span class="m-cart-item__price">$${(i.price*i.qty).toFixed(2)}</span><button class="m-cart-item__rm" onclick="removeFromCart(${i.id})">×</button></div>`).join('');document.getElementById('cartSubtotal').textContent=`$${cart.reduce((s,i)=>s+i.price*i.qty,0).toFixed(2)}`;footer.style.display='block';}
+    function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartBg').classList.add('open');}
+    function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartBg').classList.remove('open');}
+    document.getElementById('cartBtn').addEventListener('click',openCart);
+    function checkout(){cart=[];updateCart();closeCart();document.getElementById('successOverlay').classList.add('open');}
+    function closeSuccess(){document.getElementById('successOverlay').classList.remove('open');}
+    document.getElementById('orderForm').addEventListener('submit',e=>{e.preventDefault();document.getElementById('successOverlay').classList.add('open');e.target.reset();});
+
+    // HUD menu
+    function openMenu(){document.getElementById('hudMenu').classList.add('open');document.getElementById('hudBg').classList.add('open');document.body.style.overflow='hidden';}
+    function closeMenu(){document.getElementById('hudMenu').classList.remove('open');document.getElementById('hudBg').classList.remove('open');document.body.style.overflow='';}
+    document.getElementById('menuBtn').addEventListener('click',openMenu);
+
+    // Show network info in HUD
+    (function(){
+      var el=document.getElementById('hudNetVal');
+      var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+      var type=window.__netType||'unknown';
+      var slow=window.__slowNet;
+      var label=type.toUpperCase();
+      if(slow)label+=' — Reduced quality mode';
+      else label+=' — Full quality';
+      if(conn&&conn.saveData)label+=' (Data saver on)';
+      el.textContent=label;
+    })();
+
+    // Stats counter
+    const obs=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target,target=+el.dataset.target;const step=Math.max(target/50,1);let cur=0;const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=Math.floor(cur).toLocaleString();if(cur>=target)clearInterval(t);},16);obs.unobserve(el);});},{threshold:0.5});
+    document.querySelectorAll('.m-stat__num').forEach(el=>obs.observe(el));
+
+    // Bottom tab active state
+    const tabs=document.querySelectorAll('.m-tab');
+    const sectionIds=['home','products','explore','greece','about','order'];
+    const sections=sectionIds.map(id=>document.getElementById(id)).filter(Boolean);
+    function updateTabs(){const mid=window.scrollY+window.innerHeight/2;let active=sections[0];for(const s of sections){if(s.offsetTop<=mid)active=s;}tabs.forEach(t=>t.classList.toggle('active',t.dataset.section===active.id));}
+    window.addEventListener('scroll',updateTabs,{passive:true});updateTabs();
+  </script>
+</body>
+</html>

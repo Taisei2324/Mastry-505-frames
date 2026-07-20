@@ -1,0 +1,140 @@
+:root {
+  --cursor-size: 72px;
+  --cursor-angle: -45deg; /* diagonal line from (x -3, y 3) to (x 3, y -3) */
+}
+
+@media (pointer: fine) {
+  * { cursor: none !important; }
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: #f7f7f4;
+  color: #050505;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.demo {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.demo p {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 12px;
+  opacity: .55;
+}
+
+.demo h1 {
+  margin: 0;
+  font-size: clamp(48px, 10vw, 120px);
+  line-height: .86;
+  letter-spacing: -.07em;
+  font-weight: 900;
+}
+
+button {
+  justify-self: center;
+  border: 1px solid #111;
+  background: transparent;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font: inherit;
+}
+
+/* Logo cursor only. No large pop-up. */
+#customCursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-999px, -999px, 0);
+  will-change: transform;
+}
+
+.cursorBox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--cursor-angle));
+  transform-origin: center;
+}
+
+.cursorLogo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.22));
+}
+
+/* Same-size loading effect inside the 45-degree cursor box */
+.miniLoading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  opacity: 0;
+}
+
+.miniLoading span {
+  width: 18px;
+  height: 18px;
+  display: block;
+  overflow: hidden;
+  transform: scale(.2);
+  opacity: 0;
+}
+
+.miniLoading img {
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  object-fit: contain;
+  transform: translateX(calc(var(--i) * -18px));
+  filter: none;
+}
+
+/* Triggered on click / hover: sequential zoom left-to-right, inside cursor only */
+#customCursor.loading .cursorLogo {
+  opacity: .18;
+}
+
+#customCursor.loading .miniLoading {
+  opacity: 1;
+}
+
+#customCursor.loading .miniLoading span {
+  animation: miniSequentialZoom 520ms cubic-bezier(.18,.88,.24,1) both;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+@keyframes miniSequentialZoom {
+  0% {
+    transform: scale(.1);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1.45);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(.92);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}

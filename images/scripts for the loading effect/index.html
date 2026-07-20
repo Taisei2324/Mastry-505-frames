@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Island Simple Cursor</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="demo">
+    <p>custom cursor demo</p>
+    <h1>Island cursor</h1>
+    <button>hover / click</button>
+  </main>
+
+  <div id="customCursor" aria-hidden="true">
+    <div class="cursorBox">
+      <img class="cursorLogo" src="./island-logo.svg" alt="">
+      <div class="miniLoading">
+        <span style="--i:0"><img src="./island-logo.svg" alt=""></span>
+        <span style="--i:1"><img src="./island-logo.svg" alt=""></span>
+        <span style="--i:2"><img src="./island-logo.svg" alt=""></span>
+        <span style="--i:3"><img src="./island-logo.svg" alt=""></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+/* Every reload (not just a hard refresh) starts the hero from the BEGINNING:
+   stop the browser restoring the old scroll position, and force scroll to 0 on
+   load and on back/forward (bfcache) restores. Runs before first paint so there
+   is no jump. */
+(function () {
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  function toTop() { try { window.scrollTo(0, 0); } catch (e) {} }
+  toTop();                                        /* fresh load: start at the top, before first paint */
+  /* Reset again ONLY on a genuine back/forward (bfcache) restore. We must NOT
+     reset on 'load' or 'DOMContentLoaded': those fire AFTER the 505 hero frames
+     finish downloading (seconds in), so resetting there yanks a visitor who has
+     already begun scrolling back to frame 1 — the "bungee to the start" bug. */
+  window.addEventListener('pageshow', function (e) { if (e.persisted) toTop(); });
+})();
+</script>
+<title>MASTRY — Sparkling Water with Mastic · Chios × Japan</title>
+<meta name="description" content="Mastry is sparkling water infused with mastic — the crystal resin of Chios, Greece — carbonated and bottled with Japanese precision. Zero sugar. Three ingredients. Two ancient islands." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='88'%3E%F0%9F%92%A7%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Fonts loaded NON-render-blocking: the hero paints immediately with system
+     fallbacks and the web fonts swap in when they arrive (display=swap). A
+     render-blocking <link rel="stylesheet"> here freezes first paint until the
+     CSS returns — on a slow/flaky font connection that stalls the whole hero. -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&display=swap" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&display=swap" /></noscript>
+<script>
+/* Day/night theme boot — runs before the stylesheet so there is no flash.
+   No manual toggle on this page, so the theme follows the visitor's LOCAL time
+   of access: a seasonal daylight window from the clock (sunrise/sunset shift
+   with the season, temperate-latitude fit) → bright out = light, dark out =
+   dark. No geolocation, no permission prompt. (A stored mastry-theme choice,
+   if ever set, still wins for 12h.) */
+(function () {
+  var t = null;
+  try {
+    t = localStorage.getItem('mastry-theme');
+    var ts = +localStorage.getItem('mastry-theme-ts') || 0;
+    if (Date.now() - ts > 432e5) t = null;              /* choice older than 12h → re-decide by clock */
+  } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    var now = new Date();
+    var doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+    var half = 6.05 + 1.15 * Math.cos(2 * Math.PI * (doy - 172) / 365);  /* half-day length, seasonal */
+    var hr = now.getHours() + now.getMinutes() / 60;
+    t = (hr > 12 - half && hr < 12 + half) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<link rel="stylesheet" href="style.css" />
+<!-- First hero frame, media-matched to the tier the scrubber will pick (portrait
+     phones get the pre-cropped 9:16 slice; everything else the landscape reel) so
+     the opening frame is already in flight before any JS runs. On a slow-net
+     Android the scrubber may drop to the 720 tier of the same shape — the cost of
+     this hint being one tier off is a single ~11-20KB frame, the win every other
+     time is first-paint latency. -->
+<link rel="preload" as="image" href="frames-p/0001.webp" media="(max-width:760px) and (orientation:portrait)" />
+<link rel="preload" as="image" href="frames/0001.webp" media="(min-width:761px), (orientation:landscape)" />
+</head>
+<body>
+
+<div id="progress" aria-hidden="true"></div>
+
+<!-- ══ Loader ══ -->
+<div id="loader" aria-hidden="true">
+  <span class="loader__word">MASTRY</span>
+</div>
+
+<!-- ══ Nav ══ -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top">MASTRY<span class="nav__logo-jp">マストリー</span></a>
+  <nav class="nav__links" id="navLinks" aria-label="Main">
+    <a href="#story">Story</a>
+    <a href="#flavours">Flavours</a>
+    <a href="#find">Order</a>
+    <a href="merch.html">Merch</a>
+  </nav>
+  <a class="nav__cta" href="#find">Find Mastry</a>
+  <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+</header>
+
+<main id="top">
+
+<!-- ══ Hero — scroll-scrub cinematic ══
+     The bottle's journey plays frame-by-frame as you scroll: a lake in Japan →
+     the topple → the dive → the current → a ledge in Chios. The stage stays
+     PINNED (screen doesn't move) while scroll advances the render. -->
+<section class="cine" id="cine" aria-label="Scroll to follow the bottle from a lake in Japan to a ledge in Chios">
+  <div class="cine__sticky">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <!-- minimalist: nothing over the frames but a faint top scrim (nav legibility) -->
+    <div class="cine__scrim" aria-hidden="true"></div>
+
+    <!-- end card: a two-font quote — a flowing italic serif (yin) paired with a
+         letterspaced uppercase sans (yang) — fades in once the bottle arrives -->
+    <div class="cine__end">
+      <div class="cine__end-scrim" aria-hidden="true"></div>
+      <blockquote class="cine__end-title">
+        <span class="cine__end-a">Two worlds,</span>
+        <span class="cine__end-b">one water.</span>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Essence — the story, one line + the stats, nothing else ══ -->
+<section class="essence section" id="story">
+  <p class="essence__line">Mastic from Chios. Water from Japan.<br /><em>Nothing else.</em></p>
+  <ul class="stats" aria-label="What's inside">
+    <li><span class="stats__n">0</span><span class="stats__cap">sugar</span></li>
+    <li><span class="stats__n">0</span><span class="stats__cap">calories</span></li>
+    <li><span class="stats__n">3</span><span class="stats__cap">ingredients</span></li>
+    <li><span class="stats__n">2</span><span class="stats__cap">islands</span></li>
+  </ul>
+</section>
+
+<!-- ══ Flavours ══ -->
+<section class="flavours section" id="flavours">
+  <div class="flavours__head">
+    <h2 class="section__title reveal">Four waters. <em>One resin.</em></h2>
+  </div>
+
+  <div class="flavours__stage">
+    <div class="flavours__bottlewrap" data-speed="-0.045">
+      <div class="flavours__halo" aria-hidden="true"></div>
+      <!-- TWO-STAGE LOAD: these ~1.4MB-each PNGs carry data-src (not src) so they
+           download ZERO bytes while the loading screen has the network — lazy
+           loading isn't enough (slow connections balloon the browser's lazy
+           margin and fetch them during the hero load). script.js swaps src in
+           sequentially once the glide is playing (stage 2). -->
+      <img class="flavours__bottle is-active" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="images/brand%20new%20original%20catalog.png" alt="Mastry Original Mastic bottle" data-flavour="original" decoding="async" />
+      <img class="flavours__bottle" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="images/Mastry%20ad%20yuzu.png" alt="Mastry Yuzu Mastic bottle" data-flavour="yuzu" decoding="async" />
+      <img class="flavours__bottle" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="images/Ume%20mastry%20Ad.png" alt="Mastry Ume Mastic bottle" data-flavour="ume" decoding="async" />
+      <img class="flavours__bottle" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="images/hinoki%20mastry%20ad.png" alt="Mastry Hinoki Mastic bottle" data-flavour="hinoki" decoding="async" />
+    </div>
+
+    <div class="flavours__panel" data-speed="0.03">
+      <div class="flavours__list" role="tablist" aria-label="Flavours">
+        <button class="flavours__tab is-active" role="tab" aria-selected="true" data-flavour="original">
+          <span class="flavours__no">01</span><span class="flavours__name">Original Mastic</span><span class="flavours__dot" aria-hidden="true"></span>
+        </button>
+        <button class="flavours__tab" role="tab" aria-selected="false" data-flavour="yuzu">
+          <span class="flavours__no">02</span><span class="flavours__name">Yuzu Mastic</span><span class="flavours__dot" aria-hidden="true"></span>
+        </button>
+        <button class="flavours__tab" role="tab" aria-selected="false" data-flavour="ume">
+          <span class="flavours__no">03</span><span class="flavours__name">Ume Mastic</span><span class="flavours__dot" aria-hidden="true"></span>
+        </button>
+        <button class="flavours__tab" role="tab" aria-selected="false" data-flavour="hinoki">
+          <span class="flavours__no">04</span><span class="flavours__name">Hinoki Mastic</span><span class="flavours__dot" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Order / Contact ══ -->
+<section class="order section" id="find">
+  <div class="order__inner">
+    <div class="order__left reveal--fade" data-speed="0.03">
+      <p class="section__eyebrow">Order — 注文</p>
+      <h2 class="section__title">Order<br /><em>Mastry.</em></h2>
+      <p class="order__sub">Tell us what you'd like and where it's going.
+      We'll confirm by email within a day.</p>
+      <dl class="order__info">
+        <div><dt>Email</dt><dd>hello@mastry.jp</dd></div>
+        <div><dt>Origin</dt><dd>Chios, Greece × Japan</dd></div>
+        <div><dt>Ships from</dt><dd>Japan · 3–5 business days</dd></div>
+      </dl>
+    </div>
+
+    <form class="order__form reveal--fade" data-speed="-0.035" id="orderForm" novalidate="novalidate">
+      <div class="fg">
+        <label for="fname">Full name</label>
+        <input type="text" id="fname" placeholder="Your name" autocomplete="name" required />
+      </div>
+      <div class="fg">
+        <label for="femail">Email</label>
+        <input type="email" id="femail" placeholder="your@email.com" autocomplete="email" required />
+      </div>
+      <div class="fg-row">
+        <div class="fg">
+          <label for="fproduct">Flavour</label>
+          <select id="fproduct" required>
+            <option value="">Select</option>
+            <option>Original Mastic</option>
+            <option>Yuzu Mastic</option>
+            <option>Ume Mastic</option>
+            <option>Hinoki Mastic</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label for="fqty">Quantity</label>
+          <input type="number" id="fqty" min="1" max="48" value="1" required />
+        </div>
+      </div>
+      <div class="fg">
+        <label for="faddress">Delivery address</label>
+        <textarea id="faddress" rows="3" placeholder="Street, City, Country" required></textarea>
+      </div>
+      <button class="btn btn--solid" type="submit">Place order</button>
+      <p class="order__note">International shipping available worldwide.</p>
+      <p class="order__ok" id="orderOk" hidden>ありがとう — order received. We'll confirm at hello@mastry.jp.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ Footer ══ -->
+<footer class="footer">
+  <div class="footer__top">
+    <a class="footer__logo" href="#top">MASTRY</a>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="#story">Story</a>
+      <a href="#flavours">Flavours</a>
+      <a href="#find">Order</a>
+      <a href="merch.html">Merch</a>
+    </nav>
+  </div>
+  <div class="footer__bottom">
+    <p>Mastic from Chios, Greece · Assembled in Japan</p>
+    <p>© 2026 Mastry. Sparkling water with mastic.</p>
+  </div>
+</footer>
+
+<script src="frames.js"></script>
+<script src="scrubber.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,541 @@
+:root {
+  --muted-olive: #6B7A32;
+  --warm-cream: #F4E8C1;
+  --bone-white: #F7F3E8;
+  --sand-beige: #D8C99B;
+  --clay-brown: #9A6B43;
+  --deep-forest: #263A20;
+  --charcoal-green: #1F2A1C;
+  --soft-ivory: #F8F1DC;
+  --off-white: #FAF8EF;
+  --light-sage: #A8B88A;
+  --stone-gray: #8A8678;
+  --olive-mist: #EEF2D7;
+  --olive-haze: #E1E8BE;
+  --olive-sprout: #CBD894;
+  --olive-leaf: #B2C36D;
+  --olive-stem: #92A64A;
+  --olive-core: #6B7A32;
+  --olive-bark: #596830;
+  --olive-moss: #46552A;
+  --olive-grove: #354322;
+  --olive-shadow: #26341C;
+  --forest-milk: #EEF5EA;
+  --forest-fog: #DAE9D2;
+  --forest-sage: #BBD3AE;
+  --forest-herb: #92B383;
+  --forest-fern: #6E9562;
+  --forest-pine: #527748;
+  --forest-moss: #3F6037;
+  --forest-bark: #314C2B;
+  --forest-canopy: #263A20;
+  --forest-depth: #1D3018;
+  --sage-wash: #F4F7EF;
+  --sage-paper: #E7EEDB;
+  --sage-light: #D0DCBE;
+  --sage-soft: #B8C79E;
+  --sage-original: #A8B88A;
+  --sage-muted: #8E9F71;
+  --sage-herbal: #74875B;
+  --sage-earth: #5D7049;
+  --sage-woodland: #485A38;
+  --sage-valley: #34452A;
+  --water-glass: #F0FAF7;
+  --water-snowmelt: #DDF1EC;
+  --water-mint: #C3E4DA;
+  --water-spring: #A4D2C4;
+  --water-sage: #83BAAA;
+  --water-creek: #659F90;
+  --water-algae: #4E8376;
+  --water-riverstone: #3D6A60;
+  --water-deep: #2F554C;
+  --water-cedar: #234239;
+  --sky-frost: #F3FAFC;
+  --sky-powder: #DFEFF3;
+  --sky-alpine: #C7E2EA;
+  --sky-creek: #A8D1DC;
+  --sky-bluegreen: #88BBC8;
+  --sky-mineral: #6FA4B3;
+  --sky-stone: #5A8A98;
+  --sky-shadow: #47717D;
+  --sky-ridge: #355B66;
+  --sky-evening: #264650;
+  --cream-cloud: #FFFDF3;
+  --cream-paper: #FCF8E8;
+  --cream-soft: #F8F1DC;
+  --cream-warm: #F4E8C1;
+  --cream-oat: #ECDDAE;
+  --cream-sand: #D8C99B;
+  --cream-wheat: #C5B37F;
+  --cream-straw: #AC9860;
+  --cream-earth: #917C49;
+  --cream-bronze: #786436;
+  --stone-snow: #F6F4EE;
+  --stone-linen: #ECE7DB;
+  --stone-light: #D8D1C1;
+  --stone-warm: #C4BBA8;
+  --stone-moss: #AAA18F;
+  --stone-taupe: #777061;
+  --stone-cliff: #625C4F;
+  --stone-ridge: #4C493F;
+  --stone-deep: #38382F;
+  --clay-dust: #F6EEE7;
+  --clay-light: #EBD8C8;
+  --clay-soft: #D8B99B;
+  --clay-sun: #C3936C;
+  --clay-pottery: #865C3A;
+  --clay-earth: #714A2E;
+  --clay-soil: #5D3924;
+  --clay-cedar: #482C1D;
+  --clay-root: #352117;
+  --mastic-milk: #F7F4D8;
+  --mastic-gum: #EDE7BF;
+  --mastic-resin: #DED38E;
+  --mastic-leaf: #B8B66A;
+  --mastic-olive: #91964F;
+  --mastic-bark: #71793C;
+  --mastic-deep: #596532;
+  --mastic-forest: #425129;
+  --mastic-shadow: #314021;
+  --mastic-stem: #24341B;
+  --sun-pale: #FFF9E8;
+  --sun-cream: #F8EDC7;
+  --sun-hay: #EEDB9B;
+  --sun-grass: #DFC46B;
+  --sun-muted: #C6A548;
+  --sun-field: #A88632;
+  --sun-earth: #856623;
+  --sun-bronze: #6F5422;
+  --sun-bark: #58431C;
+  --sun-root: #423316;
+  --alpine-fog: #EEF1EA;
+  --rice-paper: #F9F5E9;
+  --limestone: #E6E0D1;
+  --weathered-wood: #766A56;
+  --mountain-shadow: #30352C;
+  --pine-needle: #1D2E18;
+  --dry-grass: #B6A86B;
+  --old-bronze: #726A36;
+  --creek-stone: #A5A18F;
+  --river-clay: #8B7156;
+  --cedar-brown: #5B442E;
+  --moss-gold: #8A873E;
+  --tea-leaf: #4E6A35;
+  --matcha-earth: #7F8A4A;
+  --wasabi-soft: #B9C98C;
+  --hinoki-light: #DCCB9D;
+  --bamboo-fog: #DDE8C9;
+  --green-tea: #74875A;
+  --lichen: #9BAE7A;
+  --river-mist: #D7E8E2;
+  --mineral-blue: #6D9DAA;
+  --snow-shadow: #CAD6D3;
+  --wet-stone: #6C776E;
+}
+
+body {
+  background: var(--off-white);
+  color: var(--forest-depth);
+}
+
+/* Text utilities */
+.text-muted-olive { color: var(--muted-olive); }
+.text-warm-cream { color: var(--warm-cream); }
+.text-bone-white { color: var(--bone-white); }
+.text-sand-beige { color: var(--sand-beige); }
+.text-clay-brown { color: var(--clay-brown); }
+.text-deep-forest { color: var(--deep-forest); }
+.text-charcoal-green { color: var(--charcoal-green); }
+.text-soft-ivory { color: var(--soft-ivory); }
+.text-off-white { color: var(--off-white); }
+.text-light-sage { color: var(--light-sage); }
+.text-stone-gray { color: var(--stone-gray); }
+.text-olive-mist { color: var(--olive-mist); }
+.text-olive-haze { color: var(--olive-haze); }
+.text-olive-sprout { color: var(--olive-sprout); }
+.text-olive-leaf { color: var(--olive-leaf); }
+.text-olive-stem { color: var(--olive-stem); }
+.text-olive-core { color: var(--olive-core); }
+.text-olive-bark { color: var(--olive-bark); }
+.text-olive-moss { color: var(--olive-moss); }
+.text-olive-grove { color: var(--olive-grove); }
+.text-olive-shadow { color: var(--olive-shadow); }
+.text-forest-milk { color: var(--forest-milk); }
+.text-forest-fog { color: var(--forest-fog); }
+.text-forest-sage { color: var(--forest-sage); }
+.text-forest-herb { color: var(--forest-herb); }
+.text-forest-fern { color: var(--forest-fern); }
+.text-forest-pine { color: var(--forest-pine); }
+.text-forest-moss { color: var(--forest-moss); }
+.text-forest-bark { color: var(--forest-bark); }
+.text-forest-canopy { color: var(--forest-canopy); }
+.text-forest-depth { color: var(--forest-depth); }
+.text-sage-wash { color: var(--sage-wash); }
+.text-sage-paper { color: var(--sage-paper); }
+.text-sage-light { color: var(--sage-light); }
+.text-sage-soft { color: var(--sage-soft); }
+.text-sage-original { color: var(--sage-original); }
+.text-sage-muted { color: var(--sage-muted); }
+.text-sage-herbal { color: var(--sage-herbal); }
+.text-sage-earth { color: var(--sage-earth); }
+.text-sage-woodland { color: var(--sage-woodland); }
+.text-sage-valley { color: var(--sage-valley); }
+.text-water-glass { color: var(--water-glass); }
+.text-water-snowmelt { color: var(--water-snowmelt); }
+.text-water-mint { color: var(--water-mint); }
+.text-water-spring { color: var(--water-spring); }
+.text-water-sage { color: var(--water-sage); }
+.text-water-creek { color: var(--water-creek); }
+.text-water-algae { color: var(--water-algae); }
+.text-water-riverstone { color: var(--water-riverstone); }
+.text-water-deep { color: var(--water-deep); }
+.text-water-cedar { color: var(--water-cedar); }
+.text-sky-frost { color: var(--sky-frost); }
+.text-sky-powder { color: var(--sky-powder); }
+.text-sky-alpine { color: var(--sky-alpine); }
+.text-sky-creek { color: var(--sky-creek); }
+.text-sky-bluegreen { color: var(--sky-bluegreen); }
+.text-sky-mineral { color: var(--sky-mineral); }
+.text-sky-stone { color: var(--sky-stone); }
+.text-sky-shadow { color: var(--sky-shadow); }
+.text-sky-ridge { color: var(--sky-ridge); }
+.text-sky-evening { color: var(--sky-evening); }
+.text-cream-cloud { color: var(--cream-cloud); }
+.text-cream-paper { color: var(--cream-paper); }
+.text-cream-soft { color: var(--cream-soft); }
+.text-cream-warm { color: var(--cream-warm); }
+.text-cream-oat { color: var(--cream-oat); }
+.text-cream-sand { color: var(--cream-sand); }
+.text-cream-wheat { color: var(--cream-wheat); }
+.text-cream-straw { color: var(--cream-straw); }
+.text-cream-earth { color: var(--cream-earth); }
+.text-cream-bronze { color: var(--cream-bronze); }
+.text-stone-snow { color: var(--stone-snow); }
+.text-stone-linen { color: var(--stone-linen); }
+.text-stone-light { color: var(--stone-light); }
+.text-stone-warm { color: var(--stone-warm); }
+.text-stone-moss { color: var(--stone-moss); }
+.text-stone-taupe { color: var(--stone-taupe); }
+.text-stone-cliff { color: var(--stone-cliff); }
+.text-stone-ridge { color: var(--stone-ridge); }
+.text-stone-deep { color: var(--stone-deep); }
+.text-clay-dust { color: var(--clay-dust); }
+.text-clay-light { color: var(--clay-light); }
+.text-clay-soft { color: var(--clay-soft); }
+.text-clay-sun { color: var(--clay-sun); }
+.text-clay-pottery { color: var(--clay-pottery); }
+.text-clay-earth { color: var(--clay-earth); }
+.text-clay-soil { color: var(--clay-soil); }
+.text-clay-cedar { color: var(--clay-cedar); }
+.text-clay-root { color: var(--clay-root); }
+.text-mastic-milk { color: var(--mastic-milk); }
+.text-mastic-gum { color: var(--mastic-gum); }
+.text-mastic-resin { color: var(--mastic-resin); }
+.text-mastic-leaf { color: var(--mastic-leaf); }
+.text-mastic-olive { color: var(--mastic-olive); }
+.text-mastic-bark { color: var(--mastic-bark); }
+.text-mastic-deep { color: var(--mastic-deep); }
+.text-mastic-forest { color: var(--mastic-forest); }
+.text-mastic-shadow { color: var(--mastic-shadow); }
+.text-mastic-stem { color: var(--mastic-stem); }
+.text-sun-pale { color: var(--sun-pale); }
+.text-sun-cream { color: var(--sun-cream); }
+.text-sun-hay { color: var(--sun-hay); }
+.text-sun-grass { color: var(--sun-grass); }
+.text-sun-muted { color: var(--sun-muted); }
+.text-sun-field { color: var(--sun-field); }
+.text-sun-earth { color: var(--sun-earth); }
+.text-sun-bronze { color: var(--sun-bronze); }
+.text-sun-bark { color: var(--sun-bark); }
+.text-sun-root { color: var(--sun-root); }
+.text-alpine-fog { color: var(--alpine-fog); }
+.text-rice-paper { color: var(--rice-paper); }
+.text-limestone { color: var(--limestone); }
+.text-weathered-wood { color: var(--weathered-wood); }
+.text-mountain-shadow { color: var(--mountain-shadow); }
+.text-pine-needle { color: var(--pine-needle); }
+.text-dry-grass { color: var(--dry-grass); }
+.text-old-bronze { color: var(--old-bronze); }
+.text-creek-stone { color: var(--creek-stone); }
+.text-river-clay { color: var(--river-clay); }
+.text-cedar-brown { color: var(--cedar-brown); }
+.text-moss-gold { color: var(--moss-gold); }
+.text-tea-leaf { color: var(--tea-leaf); }
+.text-matcha-earth { color: var(--matcha-earth); }
+.text-wasabi-soft { color: var(--wasabi-soft); }
+.text-hinoki-light { color: var(--hinoki-light); }
+.text-bamboo-fog { color: var(--bamboo-fog); }
+.text-green-tea { color: var(--green-tea); }
+.text-lichen { color: var(--lichen); }
+.text-river-mist { color: var(--river-mist); }
+.text-mineral-blue { color: var(--mineral-blue); }
+.text-snow-shadow { color: var(--snow-shadow); }
+.text-wet-stone { color: var(--wet-stone); }
+
+/* Background utilities */
+.bg-muted-olive { background-color: var(--muted-olive); }
+.bg-warm-cream { background-color: var(--warm-cream); }
+.bg-bone-white { background-color: var(--bone-white); }
+.bg-sand-beige { background-color: var(--sand-beige); }
+.bg-clay-brown { background-color: var(--clay-brown); }
+.bg-deep-forest { background-color: var(--deep-forest); }
+.bg-charcoal-green { background-color: var(--charcoal-green); }
+.bg-soft-ivory { background-color: var(--soft-ivory); }
+.bg-off-white { background-color: var(--off-white); }
+.bg-light-sage { background-color: var(--light-sage); }
+.bg-stone-gray { background-color: var(--stone-gray); }
+.bg-olive-mist { background-color: var(--olive-mist); }
+.bg-olive-haze { background-color: var(--olive-haze); }
+.bg-olive-sprout { background-color: var(--olive-sprout); }
+.bg-olive-leaf { background-color: var(--olive-leaf); }
+.bg-olive-stem { background-color: var(--olive-stem); }
+.bg-olive-core { background-color: var(--olive-core); }
+.bg-olive-bark { background-color: var(--olive-bark); }
+.bg-olive-moss { background-color: var(--olive-moss); }
+.bg-olive-grove { background-color: var(--olive-grove); }
+.bg-olive-shadow { background-color: var(--olive-shadow); }
+.bg-forest-milk { background-color: var(--forest-milk); }
+.bg-forest-fog { background-color: var(--forest-fog); }
+.bg-forest-sage { background-color: var(--forest-sage); }
+.bg-forest-herb { background-color: var(--forest-herb); }
+.bg-forest-fern { background-color: var(--forest-fern); }
+.bg-forest-pine { background-color: var(--forest-pine); }
+.bg-forest-moss { background-color: var(--forest-moss); }
+.bg-forest-bark { background-color: var(--forest-bark); }
+.bg-forest-canopy { background-color: var(--forest-canopy); }
+.bg-forest-depth { background-color: var(--forest-depth); }
+.bg-sage-wash { background-color: var(--sage-wash); }
+.bg-sage-paper { background-color: var(--sage-paper); }
+.bg-sage-light { background-color: var(--sage-light); }
+.bg-sage-soft { background-color: var(--sage-soft); }
+.bg-sage-original { background-color: var(--sage-original); }
+.bg-sage-muted { background-color: var(--sage-muted); }
+.bg-sage-herbal { background-color: var(--sage-herbal); }
+.bg-sage-earth { background-color: var(--sage-earth); }
+.bg-sage-woodland { background-color: var(--sage-woodland); }
+.bg-sage-valley { background-color: var(--sage-valley); }
+.bg-water-glass { background-color: var(--water-glass); }
+.bg-water-snowmelt { background-color: var(--water-snowmelt); }
+.bg-water-mint { background-color: var(--water-mint); }
+.bg-water-spring { background-color: var(--water-spring); }
+.bg-water-sage { background-color: var(--water-sage); }
+.bg-water-creek { background-color: var(--water-creek); }
+.bg-water-algae { background-color: var(--water-algae); }
+.bg-water-riverstone { background-color: var(--water-riverstone); }
+.bg-water-deep { background-color: var(--water-deep); }
+.bg-water-cedar { background-color: var(--water-cedar); }
+.bg-sky-frost { background-color: var(--sky-frost); }
+.bg-sky-powder { background-color: var(--sky-powder); }
+.bg-sky-alpine { background-color: var(--sky-alpine); }
+.bg-sky-creek { background-color: var(--sky-creek); }
+.bg-sky-bluegreen { background-color: var(--sky-bluegreen); }
+.bg-sky-mineral { background-color: var(--sky-mineral); }
+.bg-sky-stone { background-color: var(--sky-stone); }
+.bg-sky-shadow { background-color: var(--sky-shadow); }
+.bg-sky-ridge { background-color: var(--sky-ridge); }
+.bg-sky-evening { background-color: var(--sky-evening); }
+.bg-cream-cloud { background-color: var(--cream-cloud); }
+.bg-cream-paper { background-color: var(--cream-paper); }
+.bg-cream-soft { background-color: var(--cream-soft); }
+.bg-cream-warm { background-color: var(--cream-warm); }
+.bg-cream-oat { background-color: var(--cream-oat); }
+.bg-cream-sand { background-color: var(--cream-sand); }
+.bg-cream-wheat { background-color: var(--cream-wheat); }
+.bg-cream-straw { background-color: var(--cream-straw); }
+.bg-cream-earth { background-color: var(--cream-earth); }
+.bg-cream-bronze { background-color: var(--cream-bronze); }
+.bg-stone-snow { background-color: var(--stone-snow); }
+.bg-stone-linen { background-color: var(--stone-linen); }
+.bg-stone-light { background-color: var(--stone-light); }
+.bg-stone-warm { background-color: var(--stone-warm); }
+.bg-stone-moss { background-color: var(--stone-moss); }
+.bg-stone-taupe { background-color: var(--stone-taupe); }
+.bg-stone-cliff { background-color: var(--stone-cliff); }
+.bg-stone-ridge { background-color: var(--stone-ridge); }
+.bg-stone-deep { background-color: var(--stone-deep); }
+.bg-clay-dust { background-color: var(--clay-dust); }
+.bg-clay-light { background-color: var(--clay-light); }
+.bg-clay-soft { background-color: var(--clay-soft); }
+.bg-clay-sun { background-color: var(--clay-sun); }
+.bg-clay-pottery { background-color: var(--clay-pottery); }
+.bg-clay-earth { background-color: var(--clay-earth); }
+.bg-clay-soil { background-color: var(--clay-soil); }
+.bg-clay-cedar { background-color: var(--clay-cedar); }
+.bg-clay-root { background-color: var(--clay-root); }
+.bg-mastic-milk { background-color: var(--mastic-milk); }
+.bg-mastic-gum { background-color: var(--mastic-gum); }
+.bg-mastic-resin { background-color: var(--mastic-resin); }
+.bg-mastic-leaf { background-color: var(--mastic-leaf); }
+.bg-mastic-olive { background-color: var(--mastic-olive); }
+.bg-mastic-bark { background-color: var(--mastic-bark); }
+.bg-mastic-deep { background-color: var(--mastic-deep); }
+.bg-mastic-forest { background-color: var(--mastic-forest); }
+.bg-mastic-shadow { background-color: var(--mastic-shadow); }
+.bg-mastic-stem { background-color: var(--mastic-stem); }
+.bg-sun-pale { background-color: var(--sun-pale); }
+.bg-sun-cream { background-color: var(--sun-cream); }
+.bg-sun-hay { background-color: var(--sun-hay); }
+.bg-sun-grass { background-color: var(--sun-grass); }
+.bg-sun-muted { background-color: var(--sun-muted); }
+.bg-sun-field { background-color: var(--sun-field); }
+.bg-sun-earth { background-color: var(--sun-earth); }
+.bg-sun-bronze { background-color: var(--sun-bronze); }
+.bg-sun-bark { background-color: var(--sun-bark); }
+.bg-sun-root { background-color: var(--sun-root); }
+.bg-alpine-fog { background-color: var(--alpine-fog); }
+.bg-rice-paper { background-color: var(--rice-paper); }
+.bg-limestone { background-color: var(--limestone); }
+.bg-weathered-wood { background-color: var(--weathered-wood); }
+.bg-mountain-shadow { background-color: var(--mountain-shadow); }
+.bg-pine-needle { background-color: var(--pine-needle); }
+.bg-dry-grass { background-color: var(--dry-grass); }
+.bg-old-bronze { background-color: var(--old-bronze); }
+.bg-creek-stone { background-color: var(--creek-stone); }
+.bg-river-clay { background-color: var(--river-clay); }
+.bg-cedar-brown { background-color: var(--cedar-brown); }
+.bg-moss-gold { background-color: var(--moss-gold); }
+.bg-tea-leaf { background-color: var(--tea-leaf); }
+.bg-matcha-earth { background-color: var(--matcha-earth); }
+.bg-wasabi-soft { background-color: var(--wasabi-soft); }
+.bg-hinoki-light { background-color: var(--hinoki-light); }
+.bg-bamboo-fog { background-color: var(--bamboo-fog); }
+.bg-green-tea { background-color: var(--green-tea); }
+.bg-lichen { background-color: var(--lichen); }
+.bg-river-mist { background-color: var(--river-mist); }
+.bg-mineral-blue { background-color: var(--mineral-blue); }
+.bg-snow-shadow { background-color: var(--snow-shadow); }
+.bg-wet-stone { background-color: var(--wet-stone); }
+
+/* Border utilities */
+.border-muted-olive { border-color: var(--muted-olive); }
+.border-warm-cream { border-color: var(--warm-cream); }
+.border-bone-white { border-color: var(--bone-white); }
+.border-sand-beige { border-color: var(--sand-beige); }
+.border-clay-brown { border-color: var(--clay-brown); }
+.border-deep-forest { border-color: var(--deep-forest); }
+.border-charcoal-green { border-color: var(--charcoal-green); }
+.border-soft-ivory { border-color: var(--soft-ivory); }
+.border-off-white { border-color: var(--off-white); }
+.border-light-sage { border-color: var(--light-sage); }
+.border-stone-gray { border-color: var(--stone-gray); }
+.border-olive-mist { border-color: var(--olive-mist); }
+.border-olive-haze { border-color: var(--olive-haze); }
+.border-olive-sprout { border-color: var(--olive-sprout); }
+.border-olive-leaf { border-color: var(--olive-leaf); }
+.border-olive-stem { border-color: var(--olive-stem); }
+.border-olive-core { border-color: var(--olive-core); }
+.border-olive-bark { border-color: var(--olive-bark); }
+.border-olive-moss { border-color: var(--olive-moss); }
+.border-olive-grove { border-color: var(--olive-grove); }
+.border-olive-shadow { border-color: var(--olive-shadow); }
+.border-forest-milk { border-color: var(--forest-milk); }
+.border-forest-fog { border-color: var(--forest-fog); }
+.border-forest-sage { border-color: var(--forest-sage); }
+.border-forest-herb { border-color: var(--forest-herb); }
+.border-forest-fern { border-color: var(--forest-fern); }
+.border-forest-pine { border-color: var(--forest-pine); }
+.border-forest-moss { border-color: var(--forest-moss); }
+.border-forest-bark { border-color: var(--forest-bark); }
+.border-forest-canopy { border-color: var(--forest-canopy); }
+.border-forest-depth { border-color: var(--forest-depth); }
+.border-sage-wash { border-color: var(--sage-wash); }
+.border-sage-paper { border-color: var(--sage-paper); }
+.border-sage-light { border-color: var(--sage-light); }
+.border-sage-soft { border-color: var(--sage-soft); }
+.border-sage-original { border-color: var(--sage-original); }
+.border-sage-muted { border-color: var(--sage-muted); }
+.border-sage-herbal { border-color: var(--sage-herbal); }
+.border-sage-earth { border-color: var(--sage-earth); }
+.border-sage-woodland { border-color: var(--sage-woodland); }
+.border-sage-valley { border-color: var(--sage-valley); }
+.border-water-glass { border-color: var(--water-glass); }
+.border-water-snowmelt { border-color: var(--water-snowmelt); }
+.border-water-mint { border-color: var(--water-mint); }
+.border-water-spring { border-color: var(--water-spring); }
+.border-water-sage { border-color: var(--water-sage); }
+.border-water-creek { border-color: var(--water-creek); }
+.border-water-algae { border-color: var(--water-algae); }
+.border-water-riverstone { border-color: var(--water-riverstone); }
+.border-water-deep { border-color: var(--water-deep); }
+.border-water-cedar { border-color: var(--water-cedar); }
+.border-sky-frost { border-color: var(--sky-frost); }
+.border-sky-powder { border-color: var(--sky-powder); }
+.border-sky-alpine { border-color: var(--sky-alpine); }
+.border-sky-creek { border-color: var(--sky-creek); }
+.border-sky-bluegreen { border-color: var(--sky-bluegreen); }
+.border-sky-mineral { border-color: var(--sky-mineral); }
+.border-sky-stone { border-color: var(--sky-stone); }
+.border-sky-shadow { border-color: var(--sky-shadow); }
+.border-sky-ridge { border-color: var(--sky-ridge); }
+.border-sky-evening { border-color: var(--sky-evening); }
+.border-cream-cloud { border-color: var(--cream-cloud); }
+.border-cream-paper { border-color: var(--cream-paper); }
+.border-cream-soft { border-color: var(--cream-soft); }
+.border-cream-warm { border-color: var(--cream-warm); }
+.border-cream-oat { border-color: var(--cream-oat); }
+.border-cream-sand { border-color: var(--cream-sand); }
+.border-cream-wheat { border-color: var(--cream-wheat); }
+.border-cream-straw { border-color: var(--cream-straw); }
+.border-cream-earth { border-color: var(--cream-earth); }
+.border-cream-bronze { border-color: var(--cream-bronze); }
+.border-stone-snow { border-color: var(--stone-snow); }
+.border-stone-linen { border-color: var(--stone-linen); }
+.border-stone-light { border-color: var(--stone-light); }
+.border-stone-warm { border-color: var(--stone-warm); }
+.border-stone-moss { border-color: var(--stone-moss); }
+.border-stone-taupe { border-color: var(--stone-taupe); }
+.border-stone-cliff { border-color: var(--stone-cliff); }
+.border-stone-ridge { border-color: var(--stone-ridge); }
+.border-stone-deep { border-color: var(--stone-deep); }
+.border-clay-dust { border-color: var(--clay-dust); }
+.border-clay-light { border-color: var(--clay-light); }
+.border-clay-soft { border-color: var(--clay-soft); }
+.border-clay-sun { border-color: var(--clay-sun); }
+.border-clay-pottery { border-color: var(--clay-pottery); }
+.border-clay-earth { border-color: var(--clay-earth); }
+.border-clay-soil { border-color: var(--clay-soil); }
+.border-clay-cedar { border-color: var(--clay-cedar); }
+.border-clay-root { border-color: var(--clay-root); }
+.border-mastic-milk { border-color: var(--mastic-milk); }
+.border-mastic-gum { border-color: var(--mastic-gum); }
+.border-mastic-resin { border-color: var(--mastic-resin); }
+.border-mastic-leaf { border-color: var(--mastic-leaf); }
+.border-mastic-olive { border-color: var(--mastic-olive); }
+.border-mastic-bark { border-color: var(--mastic-bark); }
+.border-mastic-deep { border-color: var(--mastic-deep); }
+.border-mastic-forest { border-color: var(--mastic-forest); }
+.border-mastic-shadow { border-color: var(--mastic-shadow); }
+.border-mastic-stem { border-color: var(--mastic-stem); }
+.border-sun-pale { border-color: var(--sun-pale); }
+.border-sun-cream { border-color: var(--sun-cream); }
+.border-sun-hay { border-color: var(--sun-hay); }
+.border-sun-grass { border-color: var(--sun-grass); }
+.border-sun-muted { border-color: var(--sun-muted); }
+.border-sun-field { border-color: var(--sun-field); }
+.border-sun-earth { border-color: var(--sun-earth); }
+.border-sun-bronze { border-color: var(--sun-bronze); }
+.border-sun-bark { border-color: var(--sun-bark); }
+.border-sun-root { border-color: var(--sun-root); }
+.border-alpine-fog { border-color: var(--alpine-fog); }
+.border-rice-paper { border-color: var(--rice-paper); }
+.border-limestone { border-color: var(--limestone); }
+.border-weathered-wood { border-color: var(--weathered-wood); }
+.border-mountain-shadow { border-color: var(--mountain-shadow); }
+.border-pine-needle { border-color: var(--pine-needle); }
+.border-dry-grass { border-color: var(--dry-grass); }
+.border-old-bronze { border-color: var(--old-bronze); }
+.border-creek-stone { border-color: var(--creek-stone); }
+.border-river-clay { border-color: var(--river-clay); }
+.border-cedar-brown { border-color: var(--cedar-brown); }
+.border-moss-gold { border-color: var(--moss-gold); }
+.border-tea-leaf { border-color: var(--tea-leaf); }
+.border-matcha-earth { border-color: var(--matcha-earth); }
+.border-wasabi-soft { border-color: var(--wasabi-soft); }
+.border-hinoki-light { border-color: var(--hinoki-light); }
+.border-bamboo-fog { border-color: var(--bamboo-fog); }
+.border-green-tea { border-color: var(--green-tea); }
+.border-lichen { border-color: var(--lichen); }
+.border-river-mist { border-color: var(--river-mist); }
+.border-mineral-blue { border-color: var(--mineral-blue); }
+.border-snow-shadow { border-color: var(--snow-shadow); }
+.border-wet-stone { border-color: var(--wet-stone); }
